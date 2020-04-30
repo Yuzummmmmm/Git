@@ -44,6 +44,7 @@ Git基础命令
     git log //查看提交历史，获得commit_id，用于回退指定版本
     git reflog //查看键入命令历史，用于回到新版本
     git reset --hard commit_id //回退到指定版本
+    git log --graph //获得分支合并图
 
 ***
 查看仓库当前状态↓  
@@ -94,6 +95,7 @@ GitHub内打开Add SSH Key，把公钥的内容粘贴到Key里即可推送项目
 --------
 >*branch == 分支*  
 >*-d =? delete*  
+>*-c =? create*
 
     git branch //查看当前分支
     git branch <分支名> //创建一个分支
@@ -103,4 +105,25 @@ GitHub内打开Add SSH Key，把公钥的内容粘贴到Key里即可推送项目
     <!--git checkout <分支名> //切换到该分支-->
     <!--git checkout -b <分支名> //创建并切换到这个分支-->
     git merge <分支名> //合并该分支到当前分支
-    
+***
+分支管理策略  
+通常合并分支时，如果可能，Git会用```Fast forward```(快进)模式，但在这种模式下，删除分支后，不会保存分支信息。  
+如果要强制禁用```Fast forward```模式，Git会在合并时生成一个commit（```-m```），这样就可以从分支历史里看到分支信息。
+>```--no-ff == no Fast forward```
+
+    git merge --no-ff -m <message> <分支名>
+这样就可以在删除分支以后也可以看到分支信息了
+***
+Bug分支  
+当在开发途中，不得不中断当前工作来修复bug时，可以使用```stash```来保存工作区的改动
+
+    git stash //暂时把工作区储存起来
+现在使用```git status```查看状态时，工作区是干净的  
+当bug修复完成时，可以查看储存列表重新调出工作区
+
+    git stash list //查看所有储存到stash的工作区
+    git stash apply stash@{n} //恢复选中的工作区，但不删除储存到stash的工作区
+    git stash pop stash@{n} //恢复选择的工作区并删除储存在stash的工作区
+若想把修复的bug同步到另一个分支中  
+
+    git cherry-pick <commit_id> //使用合并时的commit，再给当前分支再合并一次
