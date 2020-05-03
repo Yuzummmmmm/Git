@@ -127,3 +127,57 @@ Bug分支
 若想把修复的bug同步到另一个分支中  
 
     git cherry-pick <commit_id> //使用合并时的commit，再给当前分支再合并一次
+***
+Feature分支  
+当你完成了一个新功能后缺不需要上线了，没有合并需要立刻删除时可用大写```-D```参数强制删除。
+
+    git branch -D <分支名> //-d是普通删除，-D是强制删除
+***
+远程库信息 
+>*remote == 远程*
+
+    git remote //获得远程库的名称
+    git remote -v //获得远程库抓取和推送的地址
+    git push origin master //推送该分支到远程分支 master
+    git push origin dev //推送该分支到远程分支 dev
+***
+多人协作  
+先从本地推送分支```git push```，如果失败就用```git pull```抓取远程库的新提交用于合并，解决冲突后再推送。  
+>若抓取时提示```no tracking information```，说明本地分支与远程分支的链接关系没有创建
+
+    git branch --set-upstream-to <分支名> origin/<分支名>
+    git branch --set-upstream-to=origin/<分支名> <分支名>
+    //两条命令均可用于设置本地与远程分支的链接
+标签管理
+---------
+在Git中先切换到要打```tag```的分支上  
+
+    git tag //查看所有标签
+    git tag <tagName> //创建一个新标签
+    git tag <tagName> <commit_id> //创建一个新标签并指定一个commit_id
+    git tag -a <tagName> -m <message> <commit_id> //创建一个带说明的标签，-a指定标签名，-m指定说明文字
+    git show <tagName> //查看标签信息
+默认情况下，```git push```命令不会传送标签到远程库上
+
+    git push origin <tagName> //显式推送标签到远程库中
+    git push origin --tags //推送所有不在远程库中的标签
+***
+操作标签  
+>:的意思是把冒号前面的标签替换成对应的标签，前面为空则删除
+
+如果标签打错了，使用```-d```可以删除
+
+    git tag -d <tagName> //删除一个标签
+如果想要删除远程标签，需要先从本地删除，然后使用```git push```删除
+
+    git push origin :refs/tags/<tagName> //删除一个在远程库的标签
+自定义Git
+---------
+以下是可以配置项：  
+>```--global```为设置全局参数  
+全局配置文件在用户主目录下的```.gitconfig```中  
+单个仓库的配置文件在```.git/config```中
+
+    git config --global color.ui true //让Git显示颜色，让命令输出更醒目
+    git config --global alias.co checkout //把命令checkout简写成co，以此类推
+忽略文件不需要上传，需要在工作区根目录创建一个```.gitignore```文件，把需要忽略的文件名填进去，Git会自动忽略这些文件。
